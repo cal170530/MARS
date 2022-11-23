@@ -16,10 +16,11 @@ network_no=4; %% or 2 or 3
 % N = total number of robots
 % X = n x N vector containing the initial robot positions
 
-
+%mode = 'static';
+mode = 'moving';
 %% Some numerical integration parameters
 dt=0.003; % numerical steplength
-Tf=3; % final time
+Tf=4; % final time
 numAgents = N-1;
 t=0; 
 iter=2;
@@ -54,6 +55,7 @@ while (t<=Tf);
 %% using a disk graph. 
 A=disk(X,N,Delta);
 DX=zeros(n,N); %% Here is where we store the derivatives 
+w0 = X(:,N);
 for i=1:numAgents
     for j=1:numAgents;
       if (A(i,j)==1);
@@ -85,21 +87,25 @@ w = updateW(numAgents,phi,combMatrix,attacker);
     DX(:,i)=DX(:,i)+(w(:,i)-X(:,i));
     X(:,i)=X(:,i)+dt.*DX(:,i);
   end
-
+if mode == 'moving'
+X(:,N) = [-2;9] +2*[cos(t);-sin(t)];
+end
 %% Update time
   t=t+dt;
 
 
 %% Plot the solution every 10 iterations
   if (mod(iter,10)==0);
-    plotsol(X,N,A,Delta);
+    plotsol(X,N,A,Delta,attacker);
   end;
 
   iter=iter+1;
 end;
 
 for k = 1:numAgents
-    MSD = MSD + norm(w0-w(:,k))^2;
+    if k~= attacker
+        MSD = MSD + norm(w0-w(:,k))^2;
+    end
 end
 MSD = MSD/numAgents;
 MSD
