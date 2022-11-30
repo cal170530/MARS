@@ -5,7 +5,7 @@ hold off;
 
 for i=1:N;
   
-  if i == N
+  if i == N || (i == N-1 && i ~= attacker)
       plot(X(1,i),X(2,i),'gd','MarkerSize',10);
   elseif i == attacker
       plot(X(1,i),X(2,i),'rd','MarkerSize',10);
@@ -18,7 +18,7 @@ for i=1:N;
       plot([X(1,i),X(1,j)],[X(2,i),X(2,j)]);
 end; end; end;
 
-axis([-2*Delta,2*Delta,-Delta,4*Delta]);
+axis([-4*Delta,4*Delta,-4*Delta,4*Delta]);
 drawnow;
 
 
